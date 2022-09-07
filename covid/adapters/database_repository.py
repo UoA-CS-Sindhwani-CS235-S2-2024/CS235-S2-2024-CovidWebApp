@@ -5,7 +5,6 @@ from sqlalchemy import desc, asc
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from sqlalchemy.orm import scoped_session
-from flask import _app_ctx_stack
 
 from covid.domain.model import User, Article, Comment, Tag
 from covid.adapters.repository import AbstractRepository
@@ -14,7 +13,7 @@ from covid.adapters.repository import AbstractRepository
 class SessionContextManager:
     def __init__(self, session_factory):
         self.__session_factory = session_factory
-        self.__session = scoped_session(self.__session_factory, scopefunc=_app_ctx_stack.__ident_func__)
+        self.__session = scoped_session(self.__session_factory)
 
     def __enter__(self):
         return self
@@ -36,7 +35,7 @@ class SessionContextManager:
         # this method can be used e.g. to allow Flask to start a new session for each http request,
         # via the 'before_request' callback
         self.close_current_session()
-        self.__session = scoped_session(self.__session_factory, scopefunc=_app_ctx_stack.__ident_func__)
+        self.__session = scoped_session(self.__session_factory)
 
     def close_current_session(self):
         if not self.__session is None:
