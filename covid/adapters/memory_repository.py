@@ -1,14 +1,10 @@
-import csv
-from pathlib import Path
-from datetime import date, datetime
+from datetime import date
 from typing import List
 
 from bisect import bisect, bisect_left, insort_left
 
-from werkzeug.security import generate_password_hash
-
 from covid.adapters.repository import AbstractRepository, RepositoryException
-from covid.domain.model import Article, Tag, User, Comment, make_tag_association, make_comment
+from covid.domain.model import Article, Tag, User, Comment
 
 
 class MemoryRepository(AbstractRepository):
@@ -152,93 +148,3 @@ class MemoryRepository(AbstractRepository):
         if index != len(self.__articles) and self.__articles[index].date == article.date:
             return index
         raise ValueError
-
-
-def read_csv_file(filename: str):
-    with open(filename, encoding='utf-8-sig') as infile:
-        reader = csv.reader(infile)
-
-        # Read first line of the the CSV file.
-        headers = next(reader)
-
-        # Read remaining rows from the CSV file.
-        for row in reader:
-            # Strip any leading/trailing white space from data read.
-            row = [item.strip() for item in row]
-            yield row
-
-
-def load_articles_and_tags(data_path: Path, repo: MemoryRepository):
-    tags = dict()
-
-    articles_filename = str(data_path / "news_articles.csv")
-    for data_row in read_csv_file(articles_filename):
-
-        article_key = int(data_row[0])
-        number_of_tags = len(data_row) - 6
-        article_tags = data_row[-number_of_tags:]
-
-        # Add any new tags; associate the current article with tags.
-        for tag in article_tags:
-            if tag not in tags.keys():
-                tags[tag] = list()
-            tags[tag].append(article_key)
-        del data_row[-number_of_tags:]
-
-        # Create Article object.
-        article = Article(
-            date=date.fromisoformat(data_row[1]),
-            title=data_row[2],
-            first_paragraph=data_row[3],
-            hyperlink=data_row[4],
-            image_hyperlink=data_row[5],
-            id=article_key
-        )
-
-        # Add the Article to the repository.
-        repo.add_article(article)
-
-    # Create Tag objects, associate them with Articles and add them to the repository.
-    for tag_name in tags.keys():
-        tag = Tag(tag_name)
-        for article_id in tags[tag_name]:
-            article = repo.get_article(article_id)
-            make_tag_association(article, tag)
-        repo.add_tag(tag)
-
-
-def load_users(data_path: Path, repo: MemoryRepository):
-    users = dict()
-
-    users_filename = str(Path(data_path) / "users.csv")
-    for data_row in read_csv_file(users_filename):
-        user = User(
-            user_name=data_row[1],
-            password=generate_password_hash(data_row[2])
-        )
-        repo.add_user(user)
-        users[data_row[0]] = user
-    return users
-
-
-def load_comments(data_path: Path, repo: MemoryRepository, users):
-    comments_filename = str(Path(data_path) / "comments.csv")
-    for data_row in read_csv_file(comments_filename):
-        comment = make_comment(
-            comment_text=data_row[3],
-            user=users[data_row[1]],
-            article=repo.get_article(int(data_row[2])),
-            timestamp=datetime.fromisoformat(data_row[4])
-        )
-        repo.add_comment(comment)
-
-
-def populate(data_path: Path, repo: MemoryRepository):
-    # Load articles and tags into the repository.
-    load_articles_and_tags(data_path, repo)
-
-    # Load users into the repository.
-    users = load_users(data_path, repo)
-
-    # Load comments into the repository.
-    load_comments(data_path, repo, users)

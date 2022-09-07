@@ -83,7 +83,7 @@ class AbstractRepository(abc.ABC):
     def get_article_ids_for_tag(self, tag_name: str):
         """ Returns a list of ids representing Articles that are tagged by tag_name.
 
-        If there are Articles that are tagged by tag_name, this method returns an empty list.
+        If there are no Articles that are tagged by tag_name, this method returns an empty list.
         """
         raise NotImplementedError
 
