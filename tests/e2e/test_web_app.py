@@ -13,7 +13,7 @@ def test_register(client):
         '/authentication/register',
         data={'user_name': 'gmichael', 'password': 'CarelessWhisper1984'}
     )
-    assert response.headers['Location'] == 'http://localhost/authentication/login'
+    assert response.headers['Location'] == '/authentication/login'
 
 
 @pytest.mark.parametrize(('user_name', 'password', 'message'), (
@@ -41,7 +41,7 @@ def test_login(client, auth):
 
     # Check that a successful login generates a redirect to the homepage.
     response = auth.login()
-    assert response.headers['Location'] == 'http://localhost/'
+    assert response.headers['Location'] == '/'
 
     # Check that a session has been created for the logged-in user.
     with client:
@@ -68,7 +68,7 @@ def test_index(client):
 
 def test_login_required_to_comment(client):
     response = client.post('/comment')
-    assert response.headers['Location'] == 'http://localhost/authentication/login'
+    assert response.headers['Location'] == '/authentication/login'
 
 
 def test_comment(client, auth):
@@ -82,7 +82,7 @@ def test_comment(client, auth):
         '/comment',
         data={'comment': 'Who needs quarantine?', 'article_id': 2}
     )
-    assert response.headers['Location'] == 'http://localhost/articles_by_date?date=2020-02-29&view_comments_for=2'
+    assert response.headers['Location'] == '/articles_by_date?date=2020-02-29&view_comments_for=2'
 
 
 @pytest.mark.parametrize(('comment', 'messages'), (
