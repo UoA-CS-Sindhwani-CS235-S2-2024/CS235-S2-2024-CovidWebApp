@@ -96,6 +96,13 @@ def login_required(view):
     def wrapped_view(**kwargs):
         if 'user_name' not in session:
             return redirect(url_for('authentication_bp.login'))
+
+        user = services.get_user(session['user_name'], repo.repo_instance)
+        # If the user does not exist (while the session is still there), redirect to the register page.
+        if not user:
+            session.clear()
+            return redirect(url_for('authentication_bp.register'
+                                    ))
         return view(**kwargs)
     return wrapped_view
 

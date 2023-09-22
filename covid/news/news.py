@@ -162,7 +162,7 @@ def articles_by_tag():
 @login_required
 def comment_on_article():
     # Obtain the user name of the currently logged in user.
-    user_name = session['user_name']
+    user_name = session['user_name'] if 'user_name' in session else None
 
     # Create form. The form maintains state, e.g. when this method is called with a HTTP GET request and populates
     # the form with an article id, when subsequently called with a HTTP POST request, the article id remains in the
