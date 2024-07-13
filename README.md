@@ -1,4 +1,4 @@
-# CompSci 235 S2 2023: Sample COVID-19 Web Application
+# CompSci 235 S2 2024: Sample COVID-19 Web Application
 
 ## Description
 
@@ -9,19 +9,19 @@ A Web application that demonstrates use of Python's Flask framework. The applica
 **Installation via requirements.txt**
 
 ```shell
-$ cd CS235-S2-2023-CovidWebApp
+$ cd CS235-S2-2024-CovidWebApp
 $ py -3 -m venv venv
 $ venv\Scripts\activate
 $ pip install -r requirements.txt
 ```
 
-When using PyCharm, set the virtual environment using 'File'->'Settings' and select 'Project:CS235-S2-2023-CovidWebApp' from the left menu. Select 'Project Interpreter', click on the gearwheel button and select 'Add'. Click the 'Existing environment' radio button to select the virtual environment. 
+When using PyCharm, set the virtual environment using 'File'->'Settings' and select 'Project:CS235-S2-2024-CovidWebApp' from the left menu. Select 'Project Interpreter', click on the gearwheel button and select 'Add'. Click the 'Existing environment' radio button to select the virtual environment. 
 
 ## Execution
 
 **Running the application**
 
-From the *CS235-S2-2023-CovidWebApp* directory, and within the activated virtual environment (see *venv\Scripts\activate* above):
+From the *CS235-S2-2024-CovidWebApp* directory, and within the activated virtual environment (see *venv\Scripts\activate* above):
 
 ````shell
 $ flask run
@@ -30,7 +30,7 @@ $ flask run
 
 ## Configuration
 
-The *CS235-S2-2023-CovidWebApp/.env* file contains variable settings. They are set with appropriate values.
+The *CS235-S2-2024-CovidWebApp/.env* file contains variable settings. They are set with appropriate values.
 
 * `FLASK_APP`: Entry point of the application (should always be `wsgi.py`).
 * `FLASK_ENV`: The environment in which to run the application (either `development` or `production`).
