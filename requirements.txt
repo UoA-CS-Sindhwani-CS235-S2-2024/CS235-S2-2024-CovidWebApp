@@ -5,3 +5,4 @@ better-profanity==0.7.0
 flask-wtf==0.15.0
 password-validator==1.0
 SQLAlchemy==1.4.41
+werkzeug==2.2.0
